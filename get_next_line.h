@@ -6,10 +6,10 @@
 /*   By: kamilbiczyk <kamilbiczyk@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/08 12:23:05 by kamilbiczyk       #+#    #+#             */
-/*   Updated: 2021/09/08 12:27:26 by kamilbiczyk      ###   ########.fr       */
+/*   Updated: 2021/09/14 23:12:30 by kamilbiczyk      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifdef BUFF_SIZE
-
+#ifdef BUFFER_SIZE
+# define BUFF_SIZE 12
 #endif
