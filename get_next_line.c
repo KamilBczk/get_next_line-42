@@ -6,7 +6,7 @@
 /*   By: kamilbiczyk <kamilbiczyk@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/08 09:38:54 by kamilbiczyk       #+#    #+#             */
-/*   Updated: 2021/09/09 00:48:36 by kamilbiczyk      ###   ########.fr       */
+/*   Updated: 2021/09/14 23:49:56 by kamilbiczyk      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,64 +28,71 @@
 ** track our location in *s because it is not needed anymore.
 */
 
-char    *get_line(char *s, int line)
+/* Return the index of each "\n" in the coresponding line */
+int	get_line_index(char *buf, int index, int line, int fd, int buffsize)
 {
-    int current_line;
-    int i;
+	int	c;
+	int i;
+	int	current_line;
 
-    i = 0;
-    current_line = 0;
-    while(*s)
-    {
-        if (current_line == line)
-            break;
-        if (*s == '\n')
-            current_line++;
-        s++;
-    }
-    while(s[i] != '\n' && s[i] != '\0')
-    {
-        printf("%c", s[i]);
-        i++;
-    }
-    printf("\n");
-    return (0);
+	c = 1;
+	current_line = 0;
+	while (c != 0)
+	{
+		i = 0;
+		c = read(fd, buf, buffsize);
+		buf[c] = '\0';
+		while (i < buffsize)
+		{
+			if (buf[i] == '\n' || buf[i] == '\0')
+			{
+				/* TODO : Si il y a des 2 lignes et on apelle la fonction 4 fois il y aura des erreurs. */
+				if (buf[i] == '\0' && current_line != line)
+					return (0);
+				if (current_line == line)
+					return (index);
+				else
+					index = 0;
+				current_line++;
+			}
+			i++;
+			index++;
+		}
+	}
+	return (-1);
 }
 
 char    *get_next_line(int fd)
 {
-    static int  x = 0;
-    char    c;
-    char    *buf;
+	static int  x = 0;
+	static int	indexline = 0;
+	char    *buf;
 
-    if (fd == -1)
-    {
-        printf("Fichier passé en param pas bon.\n");
-        return (0);
-    }
-    buf = malloc(BUFF_SIZE + 1);
-    if (!buf)
-        return (NULL);
-    c = read(fd, buf, BUFF_SIZE);
-    buf[c] = '\0';
-    get_line(buf, x);
-    x++;
-    return (0);
+	if (fd == -1)
+		return (0);
+	/* On malloc le tableau avec le BUFF_SIZE +1 */
+	buf = malloc(BUFF_SIZE + 1);
+	if (!buf)
+		return (NULL);
+	indexline += get_line_index(buf, indexline, x, fd, BUFF_SIZE);
+	printf("%d\n", indexline);
+	x++;
+	return (0);
 }
 
 int main_open_file(char *c)
 {
-    int fd;
+	int fd;
 
-    fd = open(c, O_RDONLY);
-    return (fd);
+	fd = open(c, O_RDONLY);
+	return (fd);
 }
 
 int main(void)
 {
-    get_next_line(main_open_file("testfile"));
-    get_next_line(main_open_file("testfile"));
-    get_next_line(main_open_file("testfile"));
-    get_next_line(main_open_file("testfile"));
+	get_next_line(main_open_file("testfile"));
+	get_next_line(main_open_file("testfile"));
+	get_next_line(main_open_file("testfile"));
+	get_next_line(main_open_file("testfile"));
 
 }
