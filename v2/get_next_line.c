@@ -6,23 +6,12 @@
 /*   By: kamilbiczyk <kamilbiczyk@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/15 19:48:28 by kamilbiczyk       #+#    #+#             */
-/*   Updated: 2021/09/16 22:31:56 by kamilbiczyk      ###   ########.fr       */
+/*   Updated: 2021/09/28 21:56:28 by kamilbiczyk      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
-#define BUFF_SIZE 1
-
-int	get_line_len(int lineindex)
-{
-	int	i;
-	
-	
-	return (0);
-}
+#include "get_next_line.h"
+#define BUFF_SIZE 2000
 
 int	get_line_index(char *buf, int fd, int line, int resetstatic)
 {
@@ -50,29 +39,15 @@ int	get_line_index(char *buf, int fd, int line, int resetstatic)
 	}
 	return (-1);
 }
-void	read_file(int fd)
-{
-	char	*buf;
-	int		c;
 
-	buf = malloc(sizeof(char) * (BUFF_SIZE + 1));
-	c = 1;
-	while (c != 0)
-	{
-		c = read(fd, buf, BUFF_SIZE);
-		buf[c] = '\0';
-		printf(">%s", buf);
-	}
-}
 void	get_bus(int line, int fd)
 {
 	int		c;
 	int		line_index;
-	char	*buf;
+	char	buf[BUFF_SIZE + 1];
 	
 	c = 1;
 	get_line_index(NULL, 0, 0, 1);
-	buf = malloc(sizeof(char) * (BUFF_SIZE + 1));
 	while (c != 0)
 	{
 		c = read(fd, buf, BUFF_SIZE);
@@ -84,7 +59,6 @@ void	get_bus(int line, int fd)
 			return ;
 		}
 	}
-	free(buf);
 }
 
 char    *get_next_line(int fd)
@@ -119,7 +93,7 @@ int main(void)
 	int nbOfTimes;
 
 	i = 0;
-	nbOfTimes = 6;
+	nbOfTimes = 1000;
 	while (i != nbOfTimes)
 	{
 		int	fd = main_open_file("testfile");
