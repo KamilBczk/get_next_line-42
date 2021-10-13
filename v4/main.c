@@ -6,7 +6,7 @@
 /*   By: kamilbiczyk <kamilbiczyk@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/07 16:25:28 by kamilbiczyk       #+#    #+#             */
-/*   Updated: 2021/10/13 20:11:58 by kamilbiczyk      ###   ########.fr       */
+/*   Updated: 2021/10/13 21:59:32 by kamilbiczyk      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define BUFFER_SIZE 50
+#define BUFFER_SIZE 3
 
 int		new_line(char *buf)
 {
