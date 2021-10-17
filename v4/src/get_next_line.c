@@ -1,47 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kamilbiczyk <kamilbiczyk@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/07 16:25:28 by kamilbiczyk       #+#    #+#             */
-/*   Updated: 2021/10/15 00:43:18 by kamilbiczyk      ###   ########.fr       */
+/*   Created: 2021/10/15 20:51:27 by kamilbiczyk       #+#    #+#             */
+/*   Updated: 2021/10/16 19:27:41 by kamilbiczyk      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include "get_next_line.h"
 
-#define BUFFER_SIZE 12
-
-char	*ft_strcpy(char *dest, char *src)
-{
-	int	i;
-
-	i = 0;
-	while (src[i] != '\0')
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
-
-int	new_line(char *buf, char *memory)
+int	new_line(char *buf, char *memory, char **finalstr)
 {
 	int	i;
 	int	endlflag;
+    char *temp;
+    char test[2];
 
 	i = 0;
 	endlflag = 0;
 	while (buf[i] != '\n' && buf[i] != '\0')
 	{
-		printf("%c", buf[i]);
+        test[0] = buf[i];
+        test[1] = '\0';
+        temp = *finalstr;
+		*finalstr = ft_strjoin(*finalstr, test);
+        free(temp);
 		i++;
 	}
 	if (buf[i] == '\n')
@@ -53,51 +39,51 @@ int	new_line(char *buf, char *memory)
 	return (endlflag);
 }
 
+char	*freeall(char *buf, char *finalstr)
+{
+	free(buf);
+	free(finalstr);
+	return (NULL);
+}
+
+
 char	*get_next_line(int fd)
 {
 	int			c;
 	char		*buff;
 	static char	memory[BUFFER_SIZE] = {0};
-
+    char        *finalstr;
+	char		n[2];
+	char 		*temp;
+	
+    finalstr = malloc(sizeof(char) * (1));
+    finalstr[0] = '\0';
 	buff = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	c = -1;
-	if (fd == -1 || !buff)
-		return (NULL);
+	if (fd < 0 || fd > FOPEN_MAX || (read(fd, NULL, 0) < 0) || BUFFER_SIZE < 1)
+		return (freeall(buff, finalstr));
 	while (c != 0)
 	{
 		if (memory[0] != '\0')
-			if (new_line(memory, memory) == -1)
+			if (new_line(memory, memory, &finalstr) == -1)
 				break ;
 		c = read(fd, buff, BUFFER_SIZE);
 		buff[c] = '\0';
-		if (new_line(buff, memory) == -1)
+		if (new_line(buff, memory, &finalstr) == -1)
 			break ;
 	}
-	return (0);
-}
-
-int	main_open_file(char *c)
-{
-	int	fd;
-
-	fd = open(c, O_RDONLY);
-	return (fd);
-}
-
-int	main(void)
-{
-	int	i;
-	int	nboftimes;
-	int	fd;
-
-	i = 0;
-	nboftimes = 70;
-	fd = main_open_file("testfile");
-	while (i != nboftimes)
+	n[0] = '\n';
+	if (c == 0)
+		n[0] = '\0';
+	n[1] = '\0';
+	temp = finalstr;
+    finalstr = ft_strjoin(finalstr, n);
+	free(temp);
+	free(buff);
+	if(finalstr[0] == '\0')
 	{
-		printf("\n===== Appel n°: %d ==========\n", i + 1);
-		get_next_line(fd);
-		i++;
+		free(finalstr);
+		return (NULL);
 	}
-	close(fd);
+	return finalstr;
 }
