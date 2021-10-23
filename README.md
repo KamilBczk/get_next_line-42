@@ -4,7 +4,7 @@ Create a function who read a file and in each call show the next line of this fi
 
 ## Score 🎯
 ------
-Not graded yet.
+100%
 
 ## Installation 🧩
 ------
