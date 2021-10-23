@@ -6,13 +6,18 @@
 /*   By: kamilbiczyk <kamilbiczyk@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 20:51:27 by kamilbiczyk       #+#    #+#             */
-/*   Updated: 2021/10/17 20:04:53 by kamilbiczyk      ###   ########.fr       */
+/*   Updated: 2021/10/22 12:48:27 by kamilbiczyk      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 #ifndef BUFFER_SIZE
+# define BUFFER_SIZE 1
+#endif
+
+#if BUFFER_SIZE < 1
+# undef BUFFER_SIZE
 # define BUFFER_SIZE 1
 #endif
 
